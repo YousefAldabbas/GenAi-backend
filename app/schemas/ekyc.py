@@ -1,18 +1,22 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
 
 
-class EkycBase(BaseModel):
-    ...
-    model_config = ConfigDict(orm_mode=True, arbitrary_types_allowed=True)
+class FinancialDetailsBase(BaseModel):
+    total_monthly_income: int
+    employment_status: str
+    have_loan: bool
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
-class EkycIn(EkycBase):
-    ...
+class FinancialDetailsIn(FinancialDetailsBase): ...
 
 
-class EkycUpdate(EkycBase):
-    ...
+class FinancialDetailsUpdate(FinancialDetailsBase):
+    total_monthly_income: Optional[int] = None
+    employment_status: Optional[str] = None
+    have_loan: Optional[bool] = None
 
 
-class EkycOut(BaseModel):
-    ...
+class FinancialDetailsOut(FinancialDetailsBase): ...

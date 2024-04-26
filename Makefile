@@ -26,13 +26,6 @@ format:
 test:
 	pytest .
 
-## test/re: run tests locally with a fresh database
-.PHONY: test/re
-test/re:
-	dropdb merchant_test -f && \
-	createdb merchant_test && \
-	make migrations/up && \
-	pytest -s -x --pdb --cov=app.api.v1.repositories.ekyb --cov-report=html:coverage_re
 
 ## install: install dependencies
 .PHONY: install

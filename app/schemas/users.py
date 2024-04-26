@@ -1,25 +1,29 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserBase(BaseModel):
-    username: str
+    full_name: str
+    date_of_birth: str
     email: EmailStr
-    password: str
+    phone_number: str
 
-    model_config = ConfigDict(orm_mode=True, arbitrary_types_allowed=True)
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class UserIn(UserBase):
-    ...
+    password: str
 
 
-class UserUpdate(UserBase):
-    ...
+class UserUpdate(BaseModel):
+
+    full_name: Optional[str] = None
+    date_of_birth: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone_number: Optional[str] = None
 
 
-class UserOut(BaseModel):
-    username: str
-    email: EmailStr
-
-    class Config:
-        orm_mode = True
+class UserOut(UserBase):
+    id: int
+    done_ekyc: bool

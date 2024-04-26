@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app import models
@@ -5,26 +6,31 @@ from app.schemas import users as usr_schemas
 
 
 async def create_user(
-    user: usr_schemas.UserIn, db: AsyncSession
+    payload: usr_schemas.UserIn, db: AsyncSession
 ) -> usr_schemas.UserOut:
     """
-    @param user: UserIn schema object
+    @param payload: UserIn schema object
     @param db: SQLAlchemy AsyncSession object
     """
-    db_user = models.User(
-        username=user.username, email=user.email, password=user.password
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
+    user = models.User(**payload.model_dump(exclude_unset=True, exclude_none=True))
+    db.add(user)
+    await db.commit()
+    await db.refresh(user)
+    return usr_schemas.UserOut(**user.to_dict())
 
 
-async def get_user_profile(user: models.User) -> usr_schemas.UserOut:
+async def get_user_profile(user: models.User, db: AsyncSession) -> usr_schemas.UserOut:
     """
     @param user: User model object
     """
-    return usr_schemas.UserOut.model_validate_json(user)
+
+    #  get financial details
+    q = await db.execute(
+        select(models.FinancialInfo).filter(models.FinancialInfo.user_id == user.id)
+    )
+    financial_details = q.scalar_one_or_none()
+
+    return usr_schemas.UserOut(**user.to_dict(), done_ekyc=bool(financial_details))
 
 
 async def update_user_profile(
@@ -43,4 +49,4 @@ async def update_user_profile(
 
     db.commit()
     db.refresh(user)
-    return usr_schemas.UserOut.model_validate_json(user)
+    return usr_schemas.UserOut(**user.to_dict())

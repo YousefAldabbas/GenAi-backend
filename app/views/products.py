@@ -1,10 +1,10 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.responses import JSONResponse
-from app.schemas.products import ProductsIn
-from app.repositories.products import add_land_product
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.db import get_session
 
+from app.repositories.products import add_land_product
+from app.schemas.products import ProductsIn
+from core.db import get_session
 
 router = APIRouter()
 
