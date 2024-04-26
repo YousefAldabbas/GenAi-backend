@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, Field, Json
 
 
 class ProductsBase(BaseModel):
@@ -8,12 +8,17 @@ class ProductsBase(BaseModel):
 
 
 class ProductsIn(ProductsBase):
-    ...
+    name: str = Field(alias="listing_name")
+    city: str
+    neighborhood: str
+    street: str
+    land_size: int
+    price_per_meter: int
+    os_listing_id: int
+    description: Json
 
 
-class ProductsUpdate(ProductsBase):
-    ...
+class ProductsUpdate(ProductsBase): ...
 
 
-class ProductsOut(BaseModel):
-    ...
+class ProductsOut(BaseModel): ...
