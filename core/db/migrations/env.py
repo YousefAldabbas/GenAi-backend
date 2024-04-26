@@ -6,7 +6,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.models import *
-
+from core.settings.base import settings
 from alembic import context
 
 # this is the Alembic Config object, which provides
@@ -26,7 +26,8 @@ target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
-# my_important_option = config.get_main_option("sqlalchemy.url","postgresql+psycopg2://postgres:postgres@localhost:5432/hack")
+my_important_option = config.get_main_option("sqlalchemy.url", settings.get("DATABASE_URL"))
+
 # ... etc.
 
 
@@ -66,7 +67,7 @@ async def run_async_migrations() -> None:
     and associate a connection with the context.
 
     """
-
+    config.set_main_option("sqlalchemy.url", settings.get("DATABASE_URL"))
     connectable = async_engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",

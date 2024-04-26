@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from app.schemas.products import ProductsIn
 from app.repositories.products import add_land_product
 
-router = APIRouter(prefix="/land", tags=["Products"])
+router = APIRouter()
 
 
 @router.post("")
