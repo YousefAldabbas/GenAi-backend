@@ -54,7 +54,7 @@ run: build
 ## run/local: run the app locally
 .PHONY: run/local
 run/local:
-	uvicorn app.main:app --reload
+	uvicorn main:app --reload
 
 
 # ==================================================================================== #
