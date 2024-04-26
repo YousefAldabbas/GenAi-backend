@@ -1,10 +1,16 @@
-from fastapi import HTTPException
-from app.schemas import users as usr_schemas
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app import models
-from sqlalchemy.orm import Session
+from app.schemas import users as usr_schemas
 
 
-async def create_user(user: usr_schemas.UserIn, db: Session) -> usr_schemas.UserOut:
+async def create_user(
+    user: usr_schemas.UserIn, db: AsyncSession
+) -> usr_schemas.UserOut:
+    """
+    @param user: UserIn schema object
+    @param db: SQLAlchemy AsyncSession object
+    """
     db_user = models.User(
         username=user.username, email=user.email, password=user.password
     )
@@ -14,17 +20,15 @@ async def create_user(user: usr_schemas.UserIn, db: Session) -> usr_schemas.User
     return db_user
 
 
-async def get_user_profile(user_id: int, db: Session) -> usr_schemas.UserOut:
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-
+async def get_user_profile(user: models.User) -> usr_schemas.UserOut:
+    """
+    @param user: User model object
+    """
     return usr_schemas.UserOut.model_validate_json(user)
 
 
 async def update_user_profile(
-    user: models.User, payload: usr_schemas.UserUpdate, db: Session
+    user: models.User, payload: usr_schemas.UserUpdate, db: AsyncSession
 ) -> usr_schemas.UserOut:
     """
     @param user: User model object
