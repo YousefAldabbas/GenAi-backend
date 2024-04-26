@@ -1,16 +1,23 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from app.models.base import Base
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 # an Engine, which the Session will use for connection
 # resources
-engine = create_engine("postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hack")
+engine = create_async_engine(
+    "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hack"
+)
 
-SessionLocal = sessionmaker(engine)
+async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
-async def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+async def init_db():
+    async with engine.begin() as conn:
+        # await conn.run_sync(SQLModel.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
+
+
+async def get_session() -> AsyncSession:
+    async with async_session() as session:
+        yield session
