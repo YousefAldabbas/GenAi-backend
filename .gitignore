@@ -216,3 +216,5 @@ pyrightconfig.json
 
 *.pyc
 */*.env
+
+.vscode
