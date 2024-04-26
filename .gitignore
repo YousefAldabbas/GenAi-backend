@@ -218,3 +218,5 @@ pyrightconfig.json
 */*.env
 
 .vscode
+
+poetry.lock
