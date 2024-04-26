@@ -3,7 +3,7 @@ from pydantic import BaseModel, ConfigDict
 
 class EkycBase(BaseModel):
     ...
-    model_config = ConfigDict(orm_mode=True, arbitrary_types_allowed=True)
+    model_config = ConfigDict(from_attributese=True, arbitrary_types_allowed=True)
 
 
 class EkycIn(EkycBase):

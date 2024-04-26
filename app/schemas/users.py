@@ -6,7 +6,7 @@ class UserBase(BaseModel):
     email: EmailStr
     password: str
 
-    model_config = ConfigDict(orm_mode=True, arbitrary_types_allowed=True)
+    model_config = ConfigDict(from_attributese=True, arbitrary_types_allowed=True)
 
 
 class UserIn(UserBase):
@@ -22,4 +22,4 @@ class UserOut(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode = True
+        from_attributese = True

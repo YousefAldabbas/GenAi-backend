@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict, Field, Json
 class ProductsBase(BaseModel):
     ...
 
-    model_config = ConfigDict(orm_mode=True, arbitrary_types_allowed=True)
+    model_config = ConfigDict(from_attributese=True, arbitrary_types_allowed=True)
 
 
 class ProductsIn(ProductsBase):
